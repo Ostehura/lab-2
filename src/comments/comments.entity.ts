@@ -1,3 +1,4 @@
+import { Posts } from 'src/posts/posts.entity';
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
@@ -17,6 +18,6 @@ export class Comments {
   @Column({ type: 'datetime', nullable: true })
   deletedAt: string;
 
-  //   @ManyToOne(() => Posts, (post) => post.comments)
-  //   post: Posts;
+  @ManyToOne(() => Posts, (post) => post.comments)
+  post: Posts;
 }

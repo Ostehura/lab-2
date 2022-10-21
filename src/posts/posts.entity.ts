@@ -24,6 +24,6 @@ export class Posts {
   @Column({ type: 'datetime', nullable: true })
   deletedAt: string;
 
-  //   @OneToMany(() => Comments, (comment) => comment.post)
-  //   comments: Comments[];
+  @OneToMany(() => Comments, (comment) => comment.post)
+  comments: Comments[];
 }

@@ -4,7 +4,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { CommentsModule } from './comments/comments.module';
 import { entities } from './entities';
-
+import { PostsModule } from './posts/posts.module';
 import { root } from './utils/path';
 
 @Module({
@@ -16,7 +16,7 @@ import { root } from './utils/path';
       synchronize: true,
       database: `${root}/db/db.db`,
     }),
-    // PostsModule,
+    PostsModule,
     CommentsModule,
   ],
   controllers: [AppController],
