@@ -1,16 +1,25 @@
 import { Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { CommentsController } from './comments/comments.controller';
 import { CommentsModule } from './comments/comments.module';
-import { CommentsService } from './comments/comments.service';
-import { PostModule } from './posts/post.module';
-import { PostsService } from './posts/post.service';
-import { PostsController } from './posts/posts.controller';
+import { entities } from './entities';
+
+import { root } from './utils/path';
 
 @Module({
-  imports: [PostModule, CommentsModule],
-  controllers: [AppController, PostsController, CommentsController],
-  providers: [AppService, PostsService, CommentsService],
+  imports: [
+    TypeOrmModule.forRoot({
+      entities,
+      logging: true,
+      type: 'sqlite',
+      synchronize: true,
+      database: `${root}/db/db.db`,
+    }),
+    // PostsModule,
+    CommentsModule,
+  ],
+  controllers: [AppController],
+  providers: [AppService],
 })
 export class AppModule {}
