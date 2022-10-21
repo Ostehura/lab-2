@@ -5,9 +5,9 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Posts } from 'src/posts/posts.entity';
+import { Like, Repository } from 'typeorm';
 import { Comments } from './comments.entity';
-import { Comment } from './comments.interface';
 import { CreateCommentDto } from './dto/comments.dto';
 import { UpdateCommentDTO } from './dto/updateComment.dto';
 
@@ -15,19 +15,26 @@ import { UpdateCommentDTO } from './dto/updateComment.dto';
 export class CommentsService {
   constructor(
     @InjectRepository(Comments)
-    private readonly commentsRepository: Repository<Comments>, // private readonly postsRepository: Repository<Posts>,
+    private readonly commentsRepository: Repository<Comments>,
+    @InjectRepository(Posts)
+    private readonly postsRepository: Repository<Posts>,
   ) {}
 
-  // findAll(postId: number, queryString: string) {
-  //   return this.commentsRepository.
-  //   // .filte(
-  //   //   (comment) =>
-  //   //     comment.postId === postId && comment.text.includes(queryString),
-  //   // );
-  // }
+  async findAll(postId: number, queryString: string) {
+    console.log(
+      await this.commentsRepository.findBy({
+        post: { id: postId },
+        text: Like(`%${queryString}%`),
+      }),
+    );
+    return await this.commentsRepository.findBy({
+      post: { id: postId },
+      text: Like(`%${queryString}%`),
+    });
+  }
 
-  findById(commentId: number) {
-    const comment = this.commentsRepository.findOneBy({ id: commentId });
+  async findById(commentId: number) {
+    const comment = await this.commentsRepository.findOneBy({ id: commentId });
     if (!comment) {
       throw new NotFoundException();
     }
@@ -35,20 +42,21 @@ export class CommentsService {
   }
 
   async create(createDTO: CreateCommentDto) {
-    // const post = await this.postsRepository.findOneBy({ id: createDTO.postId });
+    const post = await this.postsRepository.findOneBy({ id: createDTO.postId });
 
-    // if (!post) {
-    //   throw new HttpException(
-    //     `Post with given id = ${createDTO.postId} not found!`,
-    //     HttpStatus.NOT_FOUND,
-    //   );
-    // }
+    if (!post) {
+      throw new HttpException(
+        `Post with given id = ${createDTO.postId} not found!`,
+        HttpStatus.NOT_FOUND,
+      );
+    }
 
     const comment = this.commentsRepository.create({
+      post: { id: post.id },
       text: createDTO.text,
     });
 
-    return this.commentsRepository.save(comment);
+    return await this.commentsRepository.save(comment);
   }
 
   async update(id: number, updateDTO: UpdateCommentDTO) {
