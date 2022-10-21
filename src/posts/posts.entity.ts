@@ -9,7 +9,7 @@ export class Posts {
   @Column({ type: 'text', length: 140 })
   title: string;
 
-  @Column({ type: 'longtext', nullable: true })
+  @Column({ type: 'text', nullable: true })
   description: string;
 
   @Column({ default: false, name: 'active' })
