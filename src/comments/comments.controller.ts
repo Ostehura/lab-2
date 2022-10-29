@@ -10,8 +10,10 @@ import {
   HttpStatus,
   Body,
   Delete,
+  Put,
 } from '@nestjs/common';
 import { CreateCommentDto } from './dto/comments.dto';
+import { UpdateCommentDTO } from './dto/updateComment.dto';
 
 @Controller('comments')
 export class CommentsController {
@@ -39,5 +41,13 @@ export class CommentsController {
   @Delete(':id')
   delete(@Param('id', new ParseIntPipe()) id: number) {
     return this.commentService.delete(id);
+  }
+
+  @Put(':id')
+  update(
+    @Param('id', new ParseIntPipe()) id: number,
+    @Body() body: UpdateCommentDTO,
+  ) {
+    return this.commentService.update(id, body);
   }
 }

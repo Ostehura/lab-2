@@ -1,7 +1,11 @@
+import { IsOptional, IsString, MinLength } from 'class-validator';
+
 export class UpdatePostDto {
-  constructor(
-    readonly title: string,
-    readonly description: string,
-    readonly createdAt: string,
-  ) {}
+  @MinLength(1)
+  @IsString({ message: 'Text field is required.' })
+  public title: string;
+  @MinLength(1)
+  @IsString()
+  @IsOptional()
+  public description: string;
 }
