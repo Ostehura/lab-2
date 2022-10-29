@@ -19,7 +19,7 @@ export class Posts {
   createdAt: string;
 
   @Column({ type: 'datetime', nullable: true })
-  updatedAt: string; // "2022.09.23 15:52:15"
+  updatedAt: string;
 
   @Column({ type: 'datetime', nullable: true })
   deletedAt: string;
