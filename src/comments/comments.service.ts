@@ -20,16 +20,13 @@ export class CommentsService {
     private readonly postsRepository: Repository<Posts>,
   ) {}
 
-  async findAll(postId: number, queryString: string) {
-    console.log(
-      await this.commentsRepository.findBy({
+  async findAll(postId: number, queryString: string, order: string) {
+    return await this.commentsRepository.find({
+      where: {
         post: { id: postId },
         text: Like(`%${queryString}%`),
-      }),
-    );
-    return await this.commentsRepository.findBy({
-      post: { id: postId },
-      text: Like(`%${queryString}%`),
+      },
+      order: { createdAt: order == 'asc' ? 'asc' : 'desc' },
     });
   }
 
