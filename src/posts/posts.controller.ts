@@ -17,10 +17,10 @@ import { PostsService } from './posts.service';
 @Controller('posts')
 export class PostsController {
   constructor(private readonly postsService: PostsService) {}
-  // @Get()
-  // findAll() {
-  //   return this.postsService.findAll();
-  // }
+  @Get()
+  findAll() {
+    return this.postsService.findAll();
+  }
 
   @Get(':id')
   getById(@Param('id', new ParseIntPipe()) id: number) {

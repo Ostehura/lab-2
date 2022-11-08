@@ -12,9 +12,9 @@ export class PostsService {
     private readonly postsRepository: Repository<Posts>,
   ) {}
 
-  // async findAll(): Promise<Posts[]> {
-  //   return //await this.postsRepository.find();
-  // }
+  async findAll(): Promise<Posts[]> {
+    return await this.postsRepository.find();
+  }
 
   async findById(id: number): Promise<Posts> {
     const post = await this.postsRepository.findOneBy({ id: id });

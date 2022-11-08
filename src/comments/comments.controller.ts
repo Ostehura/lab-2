@@ -10,9 +10,16 @@ import {
   HttpStatus,
   Body,
   Delete,
+  Put,
+  ParseEnumPipe,
 } from '@nestjs/common';
 import { CreateCommentDto } from './dto/comments.dto';
+import { UpdateCommentDTO } from './dto/updateComment.dto';
 
+enum Order {
+  asc = 'asc',
+  desc = 'desc',
+}
 @Controller('comments')
 export class CommentsController {
   constructor(private readonly commentService: CommentsService) {}
@@ -21,8 +28,9 @@ export class CommentsController {
   findAll(
     @Query('postId', new ParseIntPipe()) postId: number,
     @Query('qString') qString: string,
+    @Query('order', new ParseEnumPipe(Order)) order: Order,
   ) {
-    return this.commentService.findAll(postId, qString);
+    return this.commentService.findAll(postId, qString, order);
   }
 
   @Get(':id')
@@ -39,5 +47,13 @@ export class CommentsController {
   @Delete(':id')
   delete(@Param('id', new ParseIntPipe()) id: number) {
     return this.commentService.delete(id);
+  }
+
+  @Put(':id')
+  update(
+    @Param('id', new ParseIntPipe()) id: number,
+    @Body() body: UpdateCommentDTO,
+  ) {
+    return this.commentService.update(id, body);
   }
 }
