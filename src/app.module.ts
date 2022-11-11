@@ -2,9 +2,11 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { AuthModule } from './auth/auth.module';
 import { CommentsModule } from './comments/comments.module';
 import { entities } from './entities';
 import { PostsModule } from './posts/posts.module';
+import { UserModule } from './users/users.module';
 import { root } from './utils/path';
 
 @Module({
@@ -16,8 +18,10 @@ import { root } from './utils/path';
       synchronize: true,
       database: `${root}/db/db.db`,
     }),
+    AuthModule,
     PostsModule,
     CommentsModule,
+    UserModule,
   ],
   controllers: [AppController],
   providers: [AppService],

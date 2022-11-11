@@ -1,6 +1,6 @@
 import { Posts } from 'src/posts/posts.entity';
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
-
+import { User } from 'src/users/users.entity';
 @Entity()
 export class Comments {
   @PrimaryGeneratedColumn({ type: 'int' })
@@ -20,4 +20,7 @@ export class Comments {
 
   @ManyToOne(() => Posts, (post) => post.comments)
   post: Posts;
+
+  @ManyToOne(() => User, (user) => user.comments)
+  author: User;
 }

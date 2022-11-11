@@ -12,9 +12,11 @@ import {
   Delete,
   Put,
   ParseEnumPipe,
+  UseGuards,
 } from '@nestjs/common';
 import { CreateCommentDto } from './dto/comments.dto';
 import { UpdateCommentDTO } from './dto/updateComment.dto';
+import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 
 enum Order {
   asc = 'asc',
@@ -38,17 +40,20 @@ export class CommentsController {
     return this.commentService.findById(id);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Post()
   @HttpCode(HttpStatus.CREATED)
   create(@Body() body: CreateCommentDto) {
     return this.commentService.create(body);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Delete(':id')
   delete(@Param('id', new ParseIntPipe()) id: number) {
     return this.commentService.delete(id);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Put(':id')
   update(
     @Param('id', new ParseIntPipe()) id: number,
