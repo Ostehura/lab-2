@@ -37,9 +37,9 @@ export class User {
   @Column({ type: 'datetime', nullable: true })
   deletedAt: string;
 
-  @OneToMany(() => Posts, (posts) => posts.author)
+  @OneToMany(() => Posts, (posts) => posts.author, { cascade: true })
   posts: Posts[];
 
-  @OneToMany(() => Comments, (comments) => comments.author)
+  @OneToMany(() => Comments, (comments) => comments.author, { cascade: true })
   comments: Comments[];
 }

@@ -9,6 +9,7 @@ import {
   ParseIntPipe,
   Post,
   Put,
+  Req,
   UseGuards,
 } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
@@ -32,8 +33,8 @@ export class PostsController {
   @UseGuards(JwtAuthGuard)
   @Post()
   @HttpCode(HttpStatus.CREATED)
-  create(@Body() body: CreatePostDto) {
-    return this.postsService.create(body);
+  create(@Body() body: CreatePostDto, @Req() req: any) {
+    return this.postsService.create(body, req.user.id);
   }
 
   @Put(':id')
@@ -42,13 +43,14 @@ export class PostsController {
   update(
     @Param('id', new ParseIntPipe()) id: number,
     @Body() body: UpdatePostDto,
+    @Req() req: any,
   ) {
-    return this.postsService.update(id, body);
+    return this.postsService.update(id, body, req.user.id);
   }
 
   @Delete(':id')
   @UseGuards(JwtAuthGuard)
-  delete(@Param('id', new ParseIntPipe()) id: number) {
-    return this.postsService.delete(id);
+  delete(@Param('id', new ParseIntPipe()) id: number, @Req() req: any) {
+    return this.postsService.delete(id, req.user.id);
   }
 }

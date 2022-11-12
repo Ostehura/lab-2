@@ -31,7 +31,7 @@ export class Posts {
   @Column({ type: 'datetime', nullable: true })
   deletedAt: string;
 
-  @OneToMany(() => Comments, (comment) => comment.post)
+  @OneToMany(() => Comments, (comment) => comment.post, { cascade: true })
   comments: Comments[];
 
   @ManyToOne(() => User, (user) => user.posts)
