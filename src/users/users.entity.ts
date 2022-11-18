@@ -1,9 +1,15 @@
 import { Comments } from 'src/comments/comments.entity';
 import { Posts } from 'src/posts/posts.entity';
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  BaseEntity,
+  Column,
+  Entity,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
 @Entity()
-export class User {
+export class User extends BaseEntity {
   @PrimaryGeneratedColumn({ type: 'int' })
   id: number;
 
@@ -37,9 +43,13 @@ export class User {
   @Column({ type: 'datetime', nullable: true })
   deletedAt: string;
 
-  @OneToMany(() => Posts, (posts) => posts.author, { cascade: true })
+  @OneToMany(() => Posts, (posts) => posts.author, {
+    cascade: true,
+  })
   posts: Posts[];
 
-  @OneToMany(() => Comments, (comments) => comments.author, { cascade: true })
+  @OneToMany(() => Comments, (comments) => comments.author, {
+    cascade: true,
+  })
   comments: Comments[];
 }

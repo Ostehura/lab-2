@@ -5,11 +5,12 @@ import {
   PrimaryGeneratedColumn,
   OneToMany,
   ManyToOne,
+  BaseEntity,
 } from 'typeorm';
 import { User } from 'src/users/users.entity';
 
 @Entity()
-export class Posts {
+export class Posts extends BaseEntity {
   @PrimaryGeneratedColumn({ type: 'int' })
   id: number;
 
@@ -31,9 +32,11 @@ export class Posts {
   @Column({ type: 'datetime', nullable: true })
   deletedAt: string;
 
-  @OneToMany(() => Comments, (comment) => comment.post, { cascade: true })
+  @OneToMany(() => Comments, (comment) => comment.post, {
+    cascade: true,
+  })
   comments: Comments[];
 
-  @ManyToOne(() => User, (user) => user.posts)
+  @ManyToOne(() => User, (user) => user.posts, { lazy: true })
   author: User;
 }

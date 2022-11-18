@@ -1,8 +1,14 @@
 import { Posts } from 'src/posts/posts.entity';
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  BaseEntity,
+  Column,
+  Entity,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { User } from 'src/users/users.entity';
 @Entity()
-export class Comments {
+export class Comments extends BaseEntity {
   @PrimaryGeneratedColumn({ type: 'int' })
   id: number;
 
@@ -18,9 +24,9 @@ export class Comments {
   @Column({ type: 'datetime', nullable: true })
   deletedAt: string;
 
-  @ManyToOne(() => Posts, (post) => post.comments)
+  @ManyToOne(() => Posts, (post) => post.comments, { lazy: true })
   post: Posts;
 
-  @ManyToOne(() => User, (user) => user.comments)
+  @ManyToOne(() => User, (user) => user.comments, { lazy: true })
   author: User;
 }

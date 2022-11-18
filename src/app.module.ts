@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import AdminJS from 'adminjs';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
@@ -8,6 +9,25 @@ import { entities } from './entities';
 import { PostsModule } from './posts/posts.module';
 import { UserModule } from './users/users.module';
 import { root } from './utils/path';
+import { Resource, Database } from '@adminjs/typeorm';
+import { Posts } from './posts/posts.entity';
+import { User } from './users/users.entity';
+import { AdminModule } from '@adminjs/nestjs';
+import { Comments } from './comments/comments.entity';
+
+AdminJS.registerAdapter({ Resource, Database });
+
+const DEFAULT_ADMIN = {
+  email: 'admin@example.com',
+  password: 'password',
+};
+
+const authenticate = async (email: string, password: string) => {
+  if (email === DEFAULT_ADMIN.email && password === DEFAULT_ADMIN.password) {
+    return Promise.resolve(DEFAULT_ADMIN);
+  }
+  return null;
+};
 
 @Module({
   imports: [
@@ -17,6 +37,24 @@ import { root } from './utils/path';
       type: 'sqlite',
       synchronize: true,
       database: `${root}/db/db.db`,
+    }),
+    AdminModule.createAdminAsync({
+      useFactory: () => ({
+        adminJsOptions: {
+          rootPath: '/admin',
+          resources: [User, Posts, Comments],
+        },
+        auth: {
+          authenticate,
+          cookieName: 'adminjs',
+          cookiePassword: 'secret',
+        },
+        sessionOptions: {
+          resave: true,
+          saveUninitialized: true,
+          secret: 'secret',
+        },
+      }),
     }),
     AuthModule,
     PostsModule,
