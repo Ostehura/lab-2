@@ -17,10 +17,6 @@ export class CommentsService {
   constructor(
     @InjectRepository(Comments)
     private readonly commentsRepository: Repository<Comments>,
-    @InjectRepository(Posts)
-    private readonly postsRepository: Repository<Posts>,
-    @InjectRepository(User)
-    private readonly usersRepository: Repository<User>,
   ) {}
 
   async findAll(postId: number, queryString: string, order: string) {
@@ -42,24 +38,9 @@ export class CommentsService {
   }
 
   async create(createDTO: CreateCommentDto, userId: number) {
-    const post = await this.postsRepository.findOneBy({ id: createDTO.postId });
-
-    if (!post) {
-      throw new HttpException(
-        `Post with given id = ${createDTO.postId} not found!`,
-        HttpStatus.NOT_FOUND,
-      );
-    }
-
-    const user = await this.postsRepository.findOneBy({ id: userId });
-
-    if (!user) {
-      throw new HttpException(`Invalid user id`, HttpStatus.UNAUTHORIZED);
-    }
-
     const comment = this.commentsRepository.create({
-      post: { id: post.id },
-      author: { id: user.id },
+      post: { id: createDTO.postId },
+      author: { id: userId },
       text: createDTO.text,
     });
 

@@ -20,9 +20,6 @@ export class Posts extends BaseEntity {
   @Column({ type: 'text', nullable: true })
   description: string;
 
-  @Column({ default: false, name: 'active' })
-  isActive: boolean;
-
   @Column({ type: 'datetime', default: new Date().toString() })
   createdAt: string;
 
@@ -32,11 +29,9 @@ export class Posts extends BaseEntity {
   @Column({ type: 'datetime', nullable: true })
   deletedAt: string;
 
-  @OneToMany(() => Comments, (comment) => comment.post, {
-    cascade: true,
-  })
+  @OneToMany(() => Comments, (comment) => comment.post)
   comments: Comments[];
 
-  @ManyToOne(() => User, (user) => user.posts, { lazy: true })
+  @ManyToOne(() => User, (user) => user.posts)
   author: User;
 }

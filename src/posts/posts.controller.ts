@@ -9,6 +9,7 @@ import {
   ParseIntPipe,
   Post,
   Put,
+  Render,
   Req,
   UseGuards,
 } from '@nestjs/common';
@@ -26,8 +27,20 @@ export class PostsController {
   }
 
   @Get(':id')
-  getById(@Param('id', new ParseIntPipe()) id: number) {
-    return this.postsService.findById(id);
+  @Render('post')
+  async getById(@Param('id', new ParseIntPipe()) id: number) {
+    const post = await this.postsService.findById(id);
+    const comments = (await this.postsService.getAllComments(post.id)).comments;
+    return {
+      meta: {
+        title: post.title,
+        description: post.description,
+        keywords: 'post',
+      },
+      message: 'Post page',
+      post,
+      comments,
+    };
   }
 
   @UseGuards(JwtAuthGuard)

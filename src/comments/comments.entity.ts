@@ -24,9 +24,9 @@ export class Comments extends BaseEntity {
   @Column({ type: 'datetime', nullable: true })
   deletedAt: string;
 
-  @ManyToOne(() => Posts, (post) => post.comments, { lazy: true })
+  @ManyToOne(() => Posts, (post) => post.comments)
   post: Posts;
 
-  @ManyToOne(() => User, (user) => user.comments, { lazy: true })
+  @ManyToOne(() => User, (user) => user.comments)
   author: User;
 }

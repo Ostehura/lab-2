@@ -14,6 +14,7 @@ import { Posts } from './posts/posts.entity';
 import { User } from './users/users.entity';
 import { AdminModule } from '@adminjs/nestjs';
 import { Comments } from './comments/comments.entity';
+import { PostsService } from './posts/posts.service';
 
 AdminJS.registerAdapter({ Resource, Database });
 
@@ -38,6 +39,11 @@ const authenticate = async (email: string, password: string) => {
       synchronize: true,
       database: `${root}/db/db.db`,
     }),
+    TypeOrmModule.forFeature([Comments, Posts]),
+    AuthModule,
+    PostsModule,
+    CommentsModule,
+    UserModule,
     AdminModule.createAdminAsync({
       useFactory: () => ({
         adminJsOptions: {
@@ -56,12 +62,8 @@ const authenticate = async (email: string, password: string) => {
         },
       }),
     }),
-    AuthModule,
-    PostsModule,
-    CommentsModule,
-    UserModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, PostsService],
 })
 export class AppModule {}

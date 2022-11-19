@@ -5,15 +5,12 @@ import { Posts } from './posts.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from 'src/users/users.entity';
-import { Console } from 'console';
 
 @Injectable()
 export class PostsService {
   constructor(
     @InjectRepository(Posts)
     private readonly postsRepository: Repository<Posts>,
-    @InjectRepository(User)
-    private readonly userRepository: Repository<User>,
   ) {}
 
   async findAll(): Promise<Posts[]> {
@@ -26,30 +23,21 @@ export class PostsService {
   }
 
   async create(post: CreatePostDto, userId: number) {
-    const user = await this.userRepository.findOne({ where: { id: userId } });
-
-    if (!user) {
-      throw new HttpException(`Invalid user id`, HttpStatus.UNAUTHORIZED);
-    }
-
+    console.log(userId);
     const newpost = await this.postsRepository.create({
-      ...post,
-      author: { id: user.id },
+      description: post.description,
+      title: post.title,
+      author: { id: userId },
     });
     this.postsRepository.save(newpost);
   }
 
   async update(id: number, updateDTO: UpdatePostDto, userId: number) {
-    const user = await this.userRepository.findOne({ where: { id: userId } });
-
-    if (!user) {
-      throw new HttpException(`Invalid user id`, HttpStatus.UNAUTHORIZED);
-    }
     const post = await this.postsRepository.findOne({
       where: { id: id },
       relations: ['author'],
     });
-    if (post.author.id != user.id) {
+    if (post.author.id != userId) {
       throw new HttpException(`Invalid user id`, HttpStatus.FORBIDDEN);
     }
 
@@ -68,18 +56,12 @@ export class PostsService {
   }
 
   async delete(id: number, userId: number) {
-    const user = await this.userRepository.findOne({ where: { id: userId } });
-
-    if (!user) {
-      throw new HttpException(`Invalid user id`, HttpStatus.UNAUTHORIZED);
-    }
-
     const post = await this.postsRepository.findOne({
       where: { id: id },
       relations: ['author'],
     });
-    console.log(post.author, user);
-    if (post.author.id != user.id) {
+
+    if (post.author.id != userId) {
       throw new HttpException(`Invalid user id`, HttpStatus.FORBIDDEN);
     }
 
@@ -90,5 +72,12 @@ export class PostsService {
       );
     }
     await this.postsRepository.delete({ id: id });
+  }
+
+  async getAllComments(postId: number) {
+    return await this.postsRepository.findOne({
+      where: { id: postId },
+      relations: { comments: true },
+    });
   }
 }
