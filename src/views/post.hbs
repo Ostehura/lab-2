@@ -7,14 +7,18 @@
 
 <body>
     {{>header}}
-    <div class="bg-dark text-white">
+    <div >
         
 
-        <div class="container ">
-            <h1 class="display-2 text-center">{{post.title}}</h1>
-            <h6 class="text-center">By {{post.createdBy}}</h6>
-            <div style="font-size: 2em;">
-                <p class="text-justify">{{post.description}}</p>
+        <div class="container">
+            <h1 class="text-center">{{post.title}}</h1>
+            <h6 class="text-right">By {{post.author.username}}</h6>
+            <p class="text-justify">{{post.description}}</p>
+
+        </div>
+        <div class="container">
+            <div class="row d-flex justify-content-center">
+                <img src="https://picsum.photos/600" width="600px" height="600px" />
             </div>
         </div>
 

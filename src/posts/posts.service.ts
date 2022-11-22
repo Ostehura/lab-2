@@ -5,6 +5,7 @@ import { Posts } from './posts.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from 'src/users/users.entity';
+import { retry } from 'rxjs';
 
 @Injectable()
 export class PostsService {
@@ -18,16 +19,18 @@ export class PostsService {
   }
 
   async findById(id: number): Promise<Posts> {
-    const post = await this.postsRepository.findOneBy({ id: id });
+    const post = await this.postsRepository.findOne({
+      where: { id: id },
+      relations: { author: true },
+    });
     return post;
   }
 
-  async create(post: CreatePostDto, userId: number) {
-    console.log(userId);
+  async create(post: CreatePostDto, authorUsername: string) {
     const newpost = await this.postsRepository.create({
       description: post.description,
       title: post.title,
-      author: { id: userId },
+      author: { username: authorUsername },
     });
     this.postsRepository.save(newpost);
   }

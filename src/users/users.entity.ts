@@ -1,12 +1,16 @@
 import { Comments } from 'src/comments/comments.entity';
 import { Posts } from 'src/posts/posts.entity';
+
 import {
   BaseEntity,
   Column,
   Entity,
+  JoinColumn,
   OneToMany,
+  OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+import { Profile } from 'src/userprofile/usersprofile.entity';
 
 @Entity()
 export class User extends BaseEntity {
@@ -52,4 +56,8 @@ export class User extends BaseEntity {
     cascade: true,
   })
   comments: Comments[];
+
+  @OneToOne(() => Profile)
+  @JoinColumn()
+  profile: Profile;
 }

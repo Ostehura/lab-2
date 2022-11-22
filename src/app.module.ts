@@ -15,11 +15,15 @@ import { User } from './users/users.entity';
 import { AdminModule } from '@adminjs/nestjs';
 import { Comments } from './comments/comments.entity';
 import { PostsService } from './posts/posts.service';
+import { componentLoader } from './.adminjs/components';
+import { resource } from './.adminjs/resoursce';
+import { Profile } from './userprofile/usersprofile.entity';
+import { ProfileModule } from './userprofile/userprofile.module';
 
 AdminJS.registerAdapter({ Resource, Database });
 
 const DEFAULT_ADMIN = {
-  email: 'admin@example.com',
+  email: 'example@example.com',
   password: 'password',
 };
 
@@ -44,11 +48,13 @@ const authenticate = async (email: string, password: string) => {
     PostsModule,
     CommentsModule,
     UserModule,
+    ProfileModule,
     AdminModule.createAdminAsync({
       useFactory: () => ({
         adminJsOptions: {
           rootPath: '/admin',
-          resources: [User, Posts, Comments],
+          resources: [User, resource, Comments, Profile],
+          componentLoader,
         },
         auth: {
           authenticate,

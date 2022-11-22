@@ -47,7 +47,7 @@ export class PostsController {
   @Post()
   @HttpCode(HttpStatus.CREATED)
   create(@Body() body: CreatePostDto, @Req() req: any) {
-    return this.postsService.create(body, req.user.id);
+    return this.postsService.create(body, req.user.username);
   }
 
   @Put(':id')
